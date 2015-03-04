@@ -109,18 +109,65 @@ function getDataQuadrado(){
 	];
 	return {"points": new Float32Array(points)};
 }
+function getDataCirculoFill(){
+	var points = [];
+	var coeficiente = canvas.width/canvas.height;
+	var raio = 0.07;
+	var xMove = -0.15;
+	var yMove = 0.25;
+
+	for(var i = 0 ; i<=360; i = i + 0.1){
+		rad = i * Math.PI/180;
+		x = raio * Math.cos(rad);
+		y = coeficiente * raio * Math.sin(rad);
+		points.push(x + xMove);
+		points.push(y + yMove);
+
+		points.push(0.0 + xMove);
+		points.push(0.0 + yMove);
+
+		points.push(x + xMove);
+		points.push(0.0 + yMove);
+	}
+	for(var i = 0 ; i<=360; i = i + 0.1){
+		rad = i * Math.PI/180;
+		x = raio * Math.cos(rad);
+		y = coeficiente * raio * Math.sin(rad);
+		points.push(x + xMove);
+		points.push(y + yMove);
+
+		points.push(0.0 + xMove);
+		points.push(0.0 + yMove);
+
+		points.push((-x + xMove));
+		points.push(y + yMove);
+	}
+	return {"points": new Float32Array(points)};
+}
+
 function getDataCirculo(){
 	var points = [];
-	for(var i = -1.0; i<=1.0 ; i+=0.000001){
-		y = Math.sqrt(0.2 - Math.pow(i, 2));
-		points.push(i);
+	var coeficiente = canvas.width/canvas.height;
+	var raio = 0.5;
+
+	for(var i = 0 ; i<=360; i++){
+		rad = i * Math.PI/180;
+		x = raio * Math.cos(rad);
+		y = coeficiente * raio * Math.sin(rad);
+		points.push(x);
 		points.push(y);
 	}
-	for(var i = -1.0; i<=1.0 ; i+=0.000001){
-		y = -Math.sqrt(0.2 - Math.pow(i, 2));
-		points.push(i);
-		points.push(y);
-	}
+
+	// for(var i = -1.0; i<=1.0 ; i+=0.000001){
+	// 	y = coeficiente * (Math.sqrt(0.2 - Math.pow(i, 2)));
+	// 	points.push(i);
+	// 	points.push(y);
+	// }
+	// for(var i = -1.0; i<=1.0 ; i+=0.000001){
+	// 	y = coeficiente * (-Math.sqrt(0.2 - Math.pow(i, 2)));
+	// 	points.push(i);
+	// 	points.push(y);
+	// }
 	for(var i = -1.0; i<=1.0 ; i+=0.000001){
 		y = -Math.sqrt(0.1 - Math.pow(i, 2));
 		points.push(i);
@@ -154,15 +201,15 @@ function main() {
 
 	/* PARAMETERS */
 	//data = getDataCirculo();
-	data2 = getDataTriangulo();
+	data = getDataTriangulo();
 	positionAttr = gl.getAttribLocation(shaderProgram, "position");
 	buffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-	gl.bufferData(gl.ARRAY_BUFFER, data2.points, gl.STATIC_DRAW);
+	gl.bufferData(gl.ARRAY_BUFFER, data.points, gl.STATIC_DRAW);
 	gl.enableVertexAttribArray(positionAttr);
 	gl.vertexAttribPointer(positionAttr, 2, gl.FLOAT, false, 0, 0);
 
-	gl.drawArrays(gl.TRIANGLES, 0, data2.points.length/2);
+	gl.drawArrays(gl.TRIANGLES, 0, data.points.length/2);
 
 	/* PARAMETERS */
 	//data = getDataCirculo();
@@ -174,7 +221,20 @@ function main() {
 	gl.enableVertexAttribArray(positionAttr);
 	gl.vertexAttribPointer(positionAttr, 2, gl.FLOAT, false, 0, 0);
 
-	gl.drawArrays(gl.LINE_LOOP, 0, data2.points.length/2);
+	gl.drawArrays(gl.LINE_STRIP, 0, data2.points.length/2);
+
+	/* PARAMETERS */
+	//data = getDataCirculo();
+	data2 = getDataCirculoFill();
+	positionAttr = gl.getAttribLocation(shaderProgram, "position");
+	buffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+	gl.bufferData(gl.ARRAY_BUFFER, data2.points, gl.STATIC_DRAW);
+	gl.enableVertexAttribArray(positionAttr);
+	gl.vertexAttribPointer(positionAttr, 2, gl.FLOAT, false, 0, 0);
+
+	gl.drawArrays(gl.TRIANGLES, 0, data2.points.length/2);
+
 
 	// colorAttr = gl.getAttribLocation(shaderProgram, "color");
 	// buffer2 = gl.createBuffer();
