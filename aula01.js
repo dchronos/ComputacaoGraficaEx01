@@ -171,7 +171,7 @@ function getDataCirculo(){
 	for(var i = -1.0; i<=1.0 ; i+=0.000001){
 		y = -Math.sqrt(0.1 - Math.pow(i, 2));
 		points.push(i);
-		points.push(y);
+		points.push(y*coeficiente);
 	}
 	return {"points": new Float32Array(points)};
 }
